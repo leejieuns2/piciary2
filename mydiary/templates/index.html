@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+    <br>
+    <center>
+        <ul class="nav justify-content-center">
+            <li style="font-size: 50px;">
+                <form class="form-inline" action="{% url 'index' %}" method="get">
+                    <div class="input-group-center">
+                        <select name="fd_name" id="" class="form-control">
+                            <option value="title">title</option>
+                            <option value="text">text</option>
+                        </select>
+                        <input type="text" class="form-control" name='q'>
+                        <button class="btn btn-secondary" type="submit">Search</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+
+        {%for blog in posts%}
+        <li class="list-group-item">
+            {% csrf_token %}
+                <table class="content">
+                <tr>
+                    <td id="diary_content" width="10%">{{blog.id}}</td>
+                    <td id="diary_content" width="10%"><input type="image" src="{{blog.image_thumbnail.url}}"></td>
+                    <td id="diary_content" width="20%"><a href="{% url 'detail' blog.id%}">{{blog.title}}</a></td>    
+                    <td class="btcn-group" id="diary_content" width="20%">
+                        <type="button" class="btn btn-light" disabled>작성자 : {{blog.writer}}</button>
+                    </td>
+                    <td class="btcn-group" id="diary_content" width="30%">
+                        <type="button" class="btn btn-light" disabled>작성일 : {{blog.date}}</button>
+                    </td> 
+                </tr>
+                </table>     
+        </li>
+        {% endfor %}
+    </center>
+
+    <br><br><hr>
+    <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        &nbsp;
+        {% if posts.has_previous %}
+        <li class="page-item" style="font-family:cursive;"><a class="page-link" href="?page=1">First</a></li>
+        <li class="page-item" style="font-family:cursive;"><a class="page-link" href="?page={{posts.previous_page_number}}">Previous</a></li>
+        {% endif %}
+        
+        {% for num in posts.paginator.page_range %}
+            {% ifequal num posts.number %}
+            <li class="active" style="font-family:cursive;"><a class="page-link" style="color: gray;" href="?page={{ num }}" disabled><td class="sr-only">{{num}}</td></a></li>
+            {% else %}
+            <li style="font-family:cursive;"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endifequal %}
+        {% endfor %}
+        {% if posts.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{posts.next_page_number}}">Next</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{posts.paginator.num_pages}}">Last</a></li>
+        {% endif %}
+        </ul>
+    </nav>
+
+ {% endblock %}

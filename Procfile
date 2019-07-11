@@ -1,0 +1,1 @@
+web: gunicorn session11_mydiary.wsgi --log-file -
